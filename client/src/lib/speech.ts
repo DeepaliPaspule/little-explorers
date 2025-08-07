@@ -15,23 +15,58 @@ export class SpeechService {
       return;
     }
 
-    this.currentUtterance = new SpeechSynthesisUtterance(text);
-    this.currentUtterance.rate = 0.8; // Slightly slower for clarity
-    this.currentUtterance.pitch = 1.1; // Slightly higher pitch for children
-    this.currentUtterance.volume = 1;
+    // Wait for voices to load
+    const speakNow = () => {
+      this.currentUtterance = new SpeechSynthesisUtterance(text);
+      this.currentUtterance.rate = 0.8; // Slightly slower for clarity
+      this.currentUtterance.pitch = 1.1; // Slightly higher pitch for children
+      this.currentUtterance.volume = 1;
 
-    this.currentUtterance.onend = () => {
-      this.currentUtterance = null;
-      onEnd?.();
+      // Try to set a more child-friendly voice
+      const voices = this.synth.getVoices();
+      const preferredVoice = voices.find(voice => 
+        voice.lang.startsWith('en') && 
+        (voice.name.includes('Female') || voice.name.includes('Google'))
+      ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+      
+      if (preferredVoice) {
+        this.currentUtterance.voice = preferredVoice;
+      }
+
+      this.currentUtterance.onend = () => {
+        this.currentUtterance = null;
+        onEnd?.();
+      };
+
+      this.currentUtterance.onerror = (e) => {
+        console.error('Speech synthesis error:', e);
+        // Try to provide more helpful error messages
+        if (e.error === 'not-allowed') {
+          onError?.('Speech not allowed. Please allow audio in your browser settings.');
+        } else if (e.error === 'network') {
+          onError?.('Network error. Check your internet connection.');
+        } else {
+          onError?.('Speech synthesis error occurred. Please try again.');
+        }
+        this.currentUtterance = null;
+      };
+
+      try {
+        this.synth.speak(this.currentUtterance);
+      } catch (err) {
+        console.error('Failed to speak:', err);
+        onError?.('Failed to start speech synthesis');
+      }
     };
 
-    this.currentUtterance.onerror = (e) => {
-      console.error('Speech synthesis error:', e);
-      onError?.(e);
-      this.currentUtterance = null;
-    };
-
-    this.synth.speak(this.currentUtterance);
+    // If voices aren't loaded yet, wait for them
+    if (this.synth.getVoices().length === 0) {
+      this.synth.addEventListener('voiceschanged', speakNow, { once: true });
+      // Fallback timeout in case voiceschanged never fires
+      setTimeout(speakNow, 1000);
+    } else {
+      speakNow();
+    }
   }
 
   stop(): void {

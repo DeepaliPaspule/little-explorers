@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import type { Category } from "@shared/schema";
+import { forwardRef } from "react";
 
 interface CategoryButtonProps {
   category: Category;
@@ -8,12 +9,12 @@ interface CategoryButtonProps {
   className?: string;
 }
 
-export function CategoryButton({ 
+export const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>(({ 
   category, 
   onClick, 
   onKeyDown, 
   className 
-}: CategoryButtonProps) {
+}, ref) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -24,6 +25,7 @@ export function CategoryButton({
 
   return (
     <button
+      ref={ref}
       className={cn(
         "category-button bg-surface border-2 border-primary rounded-2xl p-8 shadow-lg",
         "focus:outline-none focus:ring-4 focus:ring-accent focus:ring-offset-2",
@@ -51,4 +53,6 @@ export function CategoryButton({
       </p>
     </button>
   );
-}
+});
+
+CategoryButton.displayName = "CategoryButton";

@@ -12,13 +12,14 @@ import type { Category, LearningItem } from "@shared/schema";
 export default function HomePage() {
   const [currentView, setCurrentView] = useState<'categories' | 'items'>('categories');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [speechEnabled, setSpeechEnabled] = useState(false);
   const { speak, speakItem, stop, isSpeaking, isSupported, error: speechError } = useSpeech();
   const { toast } = useToast();
   const firstItemRef = useRef<HTMLButtonElement>(null);
   const firstCategoryRef = useRef<HTMLButtonElement>(null);
 
   // Fetch categories
-  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[]>({
     queryKey: ['/api/categories'],
   });
 
@@ -27,20 +28,28 @@ export default function HomePage() {
     data: items = [], 
     isLoading: itemsLoading,
     refetch: refetchItems 
-  } = useQuery({
+  } = useQuery<LearningItem[]>({
     queryKey: ['/api/learning-items', selectedCategory?.id],
     enabled: !!selectedCategory?.id,
   });
 
+  // Enable speech on first user interaction
+  const enableSpeech = () => {
+    if (isSupported && !speechEnabled) {
+      setSpeechEnabled(true);
+      speak('Welcome to Learn and Listen! An educational app for young learners. Use Tab to navigate between categories and Enter to select.');
+    }
+  };
+
   // Announce welcome message
   useEffect(() => {
-    if (!categoriesLoading && isSupported) {
+    if (!categoriesLoading && isSupported && speechEnabled) {
       const timer = setTimeout(() => {
         speak('Welcome to Learn and Listen! An educational app for young learners. Use Tab to navigate between categories and Enter to select.');
-      }, 1000);
+      }, 500);
       return () => clearTimeout(timer);
     }
-  }, [categoriesLoading, isSupported, speak]);
+  }, [categoriesLoading, isSupported, speechEnabled, speak]);
 
   // Handle speech errors
   useEffect(() => {
@@ -78,21 +87,31 @@ export default function HomePage() {
   }, [currentView, stop]);
 
   const handleCategorySelect = (category: Category) => {
+    if (!speechEnabled) enableSpeech();
+    
     setSelectedCategory(category);
     setCurrentView('items');
     refetchItems();
     
-    speak(`Now learning ${category.name}. Loading items, please wait.`);
+    if (speechEnabled) {
+      speak(`Now learning ${category.name}. Loading items, please wait.`);
+    }
   };
 
   const handleItemSelect = (item: LearningItem) => {
-    speakItem(item.name, item.fact);
+    if (!speechEnabled) enableSpeech();
+    
+    if (speechEnabled) {
+      speakItem(item.name, item.fact);
+    }
   };
 
   const showCategories = () => {
     setCurrentView('categories');
     setSelectedCategory(null);
-    speak('Back to categories. Choose a learning category to continue.');
+    if (speechEnabled) {
+      speak('Back to categories. Choose a learning category to continue.');
+    }
   };
 
   if (!isSupported) {
@@ -100,7 +119,8 @@ export default function HomePage() {
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg text-center max-w-md">
           <h2 className="text-xl font-semibold mb-2">Speech Not Supported</h2>
-          <p>Your browser does not support speech synthesis. Please use a modern browser like Chrome, Firefox, or Safari for the full experience.</p>
+          <p className="mb-4">Your browser does not support speech synthesis. Please use a modern browser like Chrome, Firefox, or Safari for the full experience.</p>
+          <p className="text-sm">If you're using a supported browser, try refreshing the page or checking your browser's audio settings.</p>
         </div>
       </div>
     );
@@ -160,6 +180,15 @@ export default function HomePage() {
       </nav>
 
       <main id="main-content" className="max-w-6xl mx-auto px-4 py-8" role="main">
+        {/* Speech Enable Instruction */}
+        {isSupported && !speechEnabled && (
+          <div className="bg-blue-100 border border-blue-400 text-blue-800 px-6 py-4 rounded-lg text-center mb-8">
+            <h3 className="text-lg font-semibold mb-2">🔊 Enable Audio Learning</h3>
+            <p className="mb-3">This app works best with sound! Click any category below to enable speech output and start learning.</p>
+            <p className="text-sm">The app will speak the names of items and share fun facts about them.</p>
+          </div>
+        )}
+
         {/* Loading indicator */}
         {(categoriesLoading || itemsLoading) && (
           <div className="text-center py-8">
@@ -186,7 +215,7 @@ export default function HomePage() {
               role="group" 
               aria-labelledby="categories-title"
             >
-              {categories.map((category, index) => (
+              {categories.map((category: Category, index: number) => (
                 <CategoryButton
                   key={category.id}
                   category={category}
@@ -220,7 +249,7 @@ export default function HomePage() {
               role="group"
               aria-label={`${selectedCategory.name} learning items`}
             >
-              {items.map((item, index) => (
+              {items.map((item: LearningItem, index: number) => (
                 <ItemButton
                   key={item.id}
                   item={item}

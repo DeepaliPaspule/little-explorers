@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import type { LearningItem } from "@shared/schema";
+import { forwardRef } from "react";
 
 interface ItemButtonProps {
   item: LearningItem;
@@ -9,13 +10,13 @@ interface ItemButtonProps {
   className?: string;
 }
 
-export function ItemButton({ 
+export const ItemButton = forwardRef<HTMLButtonElement, ItemButtonProps>(({ 
   item, 
   index, 
   onClick, 
   onKeyDown, 
   className 
-}: ItemButtonProps) {
+}, ref) => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -26,6 +27,7 @@ export function ItemButton({
 
   return (
     <button
+      ref={ref}
       className={cn(
         "item-button bg-surface border-2 border-gray-200 rounded-xl p-6 shadow-md",
         "focus:outline-none focus:ring-4 focus:ring-accent focus:ring-offset-2",
@@ -53,4 +55,6 @@ export function ItemButton({
       </p>
     </button>
   );
-}
+});
+
+ItemButton.displayName = "ItemButton";

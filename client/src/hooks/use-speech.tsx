@@ -26,7 +26,9 @@ export function useSpeech() {
       },
       (error) => {
         setIsSpeaking(false);
-        setError('Speech synthesis error occurred');
+        console.warn('Speech error, but continuing:', error);
+        // Don't show error to user for minor speech issues
+        // setError('Speech synthesis error occurred');
       }
     );
   }, [isSupported]);
