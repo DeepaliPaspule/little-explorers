@@ -1,8 +1,8 @@
-# Learn & Listen - Accessible Educational App
+# Little Explorers - Fun Learning Adventures
 
 ## Overview
 
-Learn & Listen is an accessible educational application designed for all learners, with special focus on accessibility for visually impaired users. The app provides non-audio learning experiences through interactive categories including fruits, vegetables, animals, and alphabet letters. Built with React and Express, it features mobile vibration feedback, high-contrast visuals, enhanced screen reader support, and comprehensive keyboard navigation to create an inclusive learning environment.
+Little Explorers is a fun and accessible educational application designed for curious kids of all abilities. The app provides engaging learning experiences through interactive categories including fruits, vegetables, animals, alphabet letters, colors, shapes, numbers, and transportation. Built with React and Express, it features mobile vibration feedback, high-contrast visuals, enhanced screen reader support, and comprehensive keyboard navigation to create an inclusive and delightful learning environment.
 
 ## User Preferences
 

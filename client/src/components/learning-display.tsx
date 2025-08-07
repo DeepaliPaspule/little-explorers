@@ -63,7 +63,7 @@ export function LearningDisplay({
           {/* Spelling Section */}
           <div className="text-center">
             <h3 className="text-lg font-semibold text-gray-800 mb-3">
-              How to spell it:
+              Let's spell it together:
             </h3>
             <div className="flex justify-center gap-2 flex-wrap">
               {spelling.map((letter, index) => (
@@ -85,7 +85,7 @@ export function LearningDisplay({
           {/* Fun Fact Section */}
           <div className="bg-gray-50 rounded-lg p-4">
             <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              Fun Fact:
+              Did You Know?
             </h3>
             <p className="text-gray-700 leading-relaxed">
               {itemFact}
@@ -98,7 +98,7 @@ export function LearningDisplay({
               onClick={onClose}
               className="bg-secondary text-white px-6 py-3 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium"
             >
-              Continue Learning
+              Keep Exploring
             </button>
           </div>
         </div>

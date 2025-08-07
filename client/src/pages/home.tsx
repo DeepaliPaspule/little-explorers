@@ -38,7 +38,7 @@ export default function HomePage() {
     if (!categoriesLoading) {
       const timer = setTimeout(() => {
         accessibilityService.announceToScreenReader(
-          'Welcome to Learn and Listen! An accessible educational app. Navigate through categories to learn about fruits, vegetables, animals, and letters. Use Tab to navigate and Enter to select.'
+          'Welcome to Little Explorers! A fun learning app for kids. Discover amazing facts about fruits, vegetables, animals, letters, colors, shapes, numbers, and transportation. Use Tab to navigate and Enter to select.'
         );
       }, 1000);
       return () => clearTimeout(timer);
@@ -114,10 +114,10 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="text-center space-y-3">
             <h1 className="text-4xl md:text-5xl font-bold" id="app-title">
-              Learn & Listen
+              Little Explorers
             </h1>
             <p className="text-xl md:text-2xl opacity-90" id="app-subtitle">
-              Accessible Learning for Everyone
+              Fun Learning Adventures
             </p>
             {accessibilityService.isVibrationAvailable() && (
               <div className="flex items-center justify-center gap-2 text-sm opacity-80">
@@ -164,14 +164,14 @@ export default function HomePage() {
         {/* Welcome Instructions */}
         {currentView === 'categories' && (
           <div className="bg-blue-100 dark:bg-blue-900 border border-blue-400 dark:border-blue-600 text-blue-800 dark:text-blue-200 px-6 py-6 rounded-2xl text-center mb-8">
-            <h3 className="text-2xl font-semibold mb-3">Welcome to Accessible Learning</h3>
+            <h3 className="text-2xl font-semibold mb-3">Ready for an Adventure?</h3>
             <div className="space-y-3 text-lg">
-              <p>Choose a category below to start exploring educational content.</p>
-              <p>Each item shows clear spelling, emojis, and interesting facts.</p>
+              <p>Pick any topic below to start your learning journey!</p>
+              <p>Discover amazing facts, see how words are spelled, and explore the world around you.</p>
               <p className="text-base opacity-80">
                 {accessibilityService.isVibrationAvailable() 
-                  ? "Tap items for vibration feedback and detailed learning displays."
-                  : "Tap items to see detailed learning displays with spelling and facts."
+                  ? "Touch any item to feel it buzz and learn cool facts!"
+                  : "Touch any item to discover fun facts and learn new things!"
                 }
               </p>
             </div>
@@ -192,11 +192,11 @@ export default function HomePage() {
           <section className="space-y-8" role="region" aria-labelledby="categories-title">
             <div className="text-center space-y-4">
               <h2 id="categories-title" className="text-3xl font-bold text-gray-800 dark:text-white">
-                Choose a Learning Category
+                What Would You Like to Explore?
               </h2>
               <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                Select a category to start learning. Use Tab to navigate and Enter or Space to select. 
-                Each item shows clear visual information and provides tactile feedback.
+                Pick a topic that interests you! Each category is full of exciting things to discover.
+                Use your keyboard or touch to explore.
               </p>
             </div>
 
@@ -225,7 +225,7 @@ export default function HomePage() {
                 Learning {selectedCategory.name}
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-300">
-                Tap any item below to see its spelling and learn interesting facts!
+                Touch anything below to discover cool facts and see how it's spelled!
               </p>
               <Button
                 onClick={showCategories}
@@ -271,13 +271,13 @@ export default function HomePage() {
       <footer className="bg-white dark:bg-gray-800 border-t-2 border-gray-100 dark:border-gray-700 mt-16 py-8" role="contentinfo">
         <div className="max-w-6xl mx-auto px-4 text-center space-y-4">
           <p className="text-gray-600 dark:text-gray-300 text-lg">
-            An accessible learning tool designed for all learners.
+            Where curiosity meets discovery - learning made fun for everyone!
           </p>
           <div className="text-gray-500 dark:text-gray-400 space-y-2">
-            <p>Use Tab to navigate, Enter or Space to select items.</p>
-            <p>Press Escape to go back or close displays.</p>
+            <p>Use your keyboard to navigate or touch to explore.</p>
+            <p>Press Escape to go back to your adventure.</p>
             {accessibilityService.isVibrationAvailable() && (
-              <p>Vibration feedback provides tactile confirmation on supported devices.</p>
+              <p>Feel the buzz when you make discoveries on your device!</p>
             )}
           </div>
         </div>
