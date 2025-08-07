@@ -28,10 +28,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/categories", async (req, res) => {
     try {
       const categories = [
-        { id: 'fruits', name: 'Fruits', emoji: '🍎', description: 'Learn about delicious fruits like apples, bananas, and oranges' },
-        { id: 'vegetables', name: 'Vegetables', emoji: '🥕', description: 'Discover healthy vegetables like carrots, broccoli, and tomatoes' },
-        { id: 'animals', name: 'Animals', emoji: '🐶', description: 'Meet amazing animals like dogs, cats, elephants, and birds' },
-        { id: 'alphabet', name: 'Alphabet', emoji: '🔤', description: 'Learn the alphabet from A to Z with fun examples' }
+        { id: 'fruits', name: 'Fruits', emoji: '🍎', description: 'Learn about delicious and healthy fruits' },
+        { id: 'vegetables', name: 'Vegetables', emoji: '🥕', description: 'Discover nutritious vegetables' },
+        { id: 'animals', name: 'Animals', emoji: '🐶', description: 'Meet amazing animals from around the world' },
+        { id: 'alphabet', name: 'Alphabet', emoji: '📚', description: 'Learn letters from A to Z' },
+        { id: 'colors', name: 'Colors', emoji: '🌈', description: 'Explore the vibrant world of colors' },
+        { id: 'shapes', name: 'Shapes', emoji: '🔷', description: 'Discover different shapes and forms' },
+        { id: 'numbers', name: 'Numbers', emoji: '🔢', description: 'Count and learn numbers 1 through 10' },
+        { id: 'transportation', name: 'Transportation', emoji: '🚗', description: 'Learn about vehicles and ways to travel' }
       ];
       res.json(categories);
     } catch (error) {
