@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CategoryButton } from "@/components/category-button";
 import { ItemButton } from "@/components/item-button";
 import { SpeechStatus } from "@/components/speech-status";
+import { SpeechFallback } from "@/components/speech-fallback";
 import { useSpeech } from "@/hooks/use-speech";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,7 @@ export default function HomePage() {
   const [currentView, setCurrentView] = useState<'categories' | 'items'>('categories');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [speechEnabled, setSpeechEnabled] = useState(false);
-  const { speak, speakItem, stop, isSpeaking, isSupported, error: speechError } = useSpeech();
+  const { speak, speakItem, stop, isSpeaking, isSupported, error: speechError, fallbackText, showFallback, hideFallback } = useSpeech();
   const { toast } = useToast();
   const firstItemRef = useRef<HTMLButtonElement>(null);
   const firstCategoryRef = useRef<HTMLButtonElement>(null);
@@ -37,7 +38,8 @@ export default function HomePage() {
   const enableSpeech = () => {
     if (isSupported && !speechEnabled) {
       setSpeechEnabled(true);
-      speak('Welcome to Learn and Listen! An educational app for young learners. Use Tab to navigate between categories and Enter to select.');
+      // Test speech immediately with a simple message
+      speak('Audio is now enabled. Hello! Welcome to Learn and Listen!');
     }
   };
 
@@ -180,12 +182,26 @@ export default function HomePage() {
       </nav>
 
       <main id="main-content" className="max-w-6xl mx-auto px-4 py-8" role="main">
-        {/* Speech Enable Instruction */}
-        {isSupported && !speechEnabled && (
+        {/* Learning Instructions */}
+        {!speechEnabled && (
           <div className="bg-blue-100 border border-blue-400 text-blue-800 px-6 py-4 rounded-lg text-center mb-8">
-            <h3 className="text-lg font-semibold mb-2">🔊 Enable Audio Learning</h3>
-            <p className="mb-3">This app works best with sound! Click any category below to enable speech output and start learning.</p>
-            <p className="text-sm">The app will speak the names of items and share fun facts about them.</p>
+            <h3 className="text-lg font-semibold mb-2">📚 Welcome to Learn & Listen</h3>
+            <p className="mb-3">This app teaches through interactive learning! Click any category below to start exploring.</p>
+            <p className="text-sm">The app will show or speak the names of items and share fun facts about them.</p>
+            <button 
+              onClick={enableSpeech}
+              className="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
+            >
+              🚀 Start Learning
+            </button>
+          </div>
+        )}
+
+        {/* Active Learning Feedback */}
+        {speechEnabled && (
+          <div className="bg-green-100 border border-green-400 text-green-800 px-6 py-4 rounded-lg text-center mb-8">
+            <h3 className="text-lg font-semibold mb-2">✅ Learning Mode Active</h3>
+            <p>Great! Click any item to learn about it. You'll see helpful text or hear audio if available.</p>
           </div>
         )}
 
@@ -265,6 +281,13 @@ export default function HomePage() {
 
       {/* Speech Status */}
       <SpeechStatus isVisible={isSpeaking} />
+
+      {/* Speech Fallback */}
+      <SpeechFallback 
+        text={fallbackText}
+        isVisible={showFallback}
+        onClose={hideFallback}
+      />
 
       {/* Footer */}
       <footer className="bg-white border-t-2 border-gray-100 mt-16 py-8" role="contentinfo">

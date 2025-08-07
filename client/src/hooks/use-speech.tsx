@@ -5,6 +5,8 @@ export function useSpeech() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fallbackText, setFallbackText] = useState<string>('');
+  const [showFallback, setShowFallback] = useState(false);
 
   useEffect(() => {
     setIsSupported(speechService.isSupported());
@@ -12,7 +14,9 @@ export function useSpeech() {
 
   const speak = useCallback((text: string) => {
     if (!isSupported) {
-      setError('Speech synthesis not supported in this browser');
+      // Show fallback text display
+      setFallbackText(text);
+      setShowFallback(true);
       return;
     }
 
@@ -26,9 +30,10 @@ export function useSpeech() {
       },
       (error) => {
         setIsSpeaking(false);
-        console.warn('Speech error, but continuing:', error);
-        // Don't show error to user for minor speech issues
-        // setError('Speech synthesis error occurred');
+        console.warn('Speech failed, showing text instead:', error);
+        // Show fallback text when speech fails
+        setFallbackText(text);
+        setShowFallback(true);
       }
     );
   }, [isSupported]);
@@ -43,12 +48,20 @@ export function useSpeech() {
     speak(text);
   }, [speak]);
 
+  const hideFallback = useCallback(() => {
+    setShowFallback(false);
+    setFallbackText('');
+  }, []);
+
   return {
     speak,
     speakItem,
     stop,
     isSpeaking,
     isSupported,
-    error
+    error,
+    fallbackText,
+    showFallback,
+    hideFallback
   };
 }
