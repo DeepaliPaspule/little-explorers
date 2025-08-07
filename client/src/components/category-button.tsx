@@ -20,8 +20,8 @@ export const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>
     // Trigger vibration feedback
     accessibilityService.vibrate('select');
     
-    // Announce to screen reader
-    accessibilityService.announceToScreenReader(`Selected ${category.name} category. ${category.description}`);
+    // Announce to screen reader with excitement
+    accessibilityService.announceToScreenReader(`WOW! You picked ${category.name}! Get ready for amazing discoveries! ${category.description}`);
     
     onClick(category);
   };
@@ -52,7 +52,7 @@ export const CategoryButton = forwardRef<HTMLButtonElement, CategoryButtonProps>
       aria-label={`${category.name} category button. ${category.description}`}
       role="button"
     >
-      <div className="text-8xl mb-4" aria-hidden="true" role="img" aria-label={`${category.name} emoji`}>
+      <div className="text-8xl mb-4 floating-emoji" aria-hidden="true" role="img" aria-label={`${category.name} emoji`}>
         {category.emoji}
       </div>
       <h3 className="text-2xl font-bold text-primary dark:text-blue-400 mb-3">

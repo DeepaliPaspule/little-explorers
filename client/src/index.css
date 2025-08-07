@@ -94,27 +94,135 @@
     line-height: 1.2;
   }
 
-  /* Animation for category buttons */
+  /* Crazy animations for category buttons */
   .category-button {
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    position: relative;
+    overflow: hidden;
   }
 
   .category-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(25, 118, 210, 0.15);
+    transform: translateY(-8px) scale(1.05) rotate(2deg);
+    box-shadow: 0 15px 35px rgba(25, 118, 210, 0.25);
+    animation: wiggle 0.5s ease-in-out;
   }
 
   .category-button:active {
-    transform: translateY(0);
+    transform: translateY(-2px) scale(0.98);
+    animation: bounce 0.3s ease-in-out;
   }
 
-  /* Animation for item buttons */
+  /* Crazy animations for item buttons */
   .item-button {
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    position: relative;
   }
 
   .item-button:hover {
-    background-color: hsl(210 40% 98%);
+    transform: translateY(-5px) scale(1.08) rotate(-1deg);
+    background: linear-gradient(45deg, hsl(210 40% 98%), hsl(45 95% 95%));
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    animation: shake 0.4s ease-in-out;
+  }
+
+  .item-button:active {
+    transform: scale(0.95);
+    animation: pop 0.2s ease-out;
+  }
+
+  /* Crazy keyframe animations */
+  @keyframes wiggle {
+    0%, 100% { transform: translateY(-8px) scale(1.05) rotate(2deg); }
+    25% { transform: translateY(-8px) scale(1.05) rotate(-2deg); }
+    75% { transform: translateY(-8px) scale(1.05) rotate(1deg); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateY(-5px) scale(1.08) rotate(-1deg); }
+    25% { transform: translateY(-5px) scale(1.08) rotate(1deg); }
+    50% { transform: translateY(-5px) scale(1.08) rotate(-1deg); }
+    75% { transform: translateY(-5px) scale(1.08) rotate(0deg); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(-2px) scale(0.98); }
+    50% { transform: translateY(-4px) scale(1.02); }
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.95); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes rainbow-glow {
+    0% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
+    16% { box-shadow: 0 0 20px rgba(255, 165, 0, 0.5); }
+    33% { box-shadow: 0 0 20px rgba(255, 255, 0, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(0, 255, 0, 0.5); }
+    66% { box-shadow: 0 0 20px rgba(0, 0, 255, 0.5); }
+    83% { box-shadow: 0 0 20px rgba(75, 0, 130, 0.5); }
+    100% { box-shadow: 0 0 20px rgba(238, 130, 238, 0.5); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Floating animation for emojis */
+  .floating-emoji {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Special celebration animation */
+  .celebration {
+    animation: rainbow-glow 2s linear infinite;
+  }
+
+  /* Rainbow gradient colors */
+  :root {
+    --rainbow-start: #ff0000;
+    --rainbow-middle: #00ff00;
+    --rainbow-end: #0000ff;
+  }
+
+  /* Crazy pulse animation for important elements */
+  .crazy-pulse {
+    animation: crazy-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes crazy-pulse {
+    0%, 100% { 
+      transform: scale(1);
+      opacity: 1;
+    }
+    25% { 
+      transform: scale(1.05) rotate(1deg);
+      opacity: 0.9;
+    }
+    50% { 
+      transform: scale(1.1) rotate(-1deg);
+      opacity: 0.8;
+    }
+    75% { 
+      transform: scale(1.05) rotate(1deg);
+      opacity: 0.9;
+    }
+  }
+
+  /* Interactive hover effects that are more pronounced */
+  .category-button:hover .floating-emoji {
+    animation: float 0.5s ease-in-out infinite, crazy-pulse 1s ease-in-out infinite;
+  }
+
+  .item-button:hover .floating-emoji {
+    animation: float 0.3s ease-in-out infinite, spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg) scale(1); }
+    to { transform: rotate(360deg) scale(1.2); }
   }
 
   /* High contrast focus indicators */

@@ -18,9 +18,9 @@ export class MemStorage implements IStorage {
   private seedData() {
     const learningData = [
       // Fruits - Expanded collection
-      { name: 'Apple', category: 'fruits', emoji: '🍎', fact: 'Apples float in water because they are 25% air!' },
-      { name: 'Banana', category: 'fruits', emoji: '🍌', fact: 'Bananas are berries, but strawberries are not!' },
-      { name: 'Orange', category: 'fruits', emoji: '🍊', fact: 'Oranges are full of vitamin C which keeps you healthy!' },
+      { name: 'Apple', category: 'fruits', emoji: '🍎', fact: 'CRUNCH! Apples float in water because they are 25% air! That means you could have an apple boat!' },
+      { name: 'Banana', category: 'fruits', emoji: '🍌', fact: 'AMAZING! Bananas are actually berries, but strawberries are not! Bananas grow upside down too!' },
+      { name: 'Orange', category: 'fruits', emoji: '🍊', fact: 'WOW! Oranges are like little vitamin C superheroes that keep you healthy and strong!' },
       { name: 'Grape', category: 'fruits', emoji: '🍇', fact: 'Grapes grow in bunches on vines!' },
       { name: 'Strawberry', category: 'fruits', emoji: '🍓', fact: 'Strawberries are the only fruit with seeds on the outside!' },
       { name: 'Watermelon', category: 'fruits', emoji: '🍉', fact: 'Watermelons are 92% water!' },
@@ -50,9 +50,9 @@ export class MemStorage implements IStorage {
       { name: 'Eggplant', category: 'vegetables', emoji: '🍆', fact: 'Eggplants used to be white and shaped like eggs!' },
       
       // Animals - Expanded collection
-      { name: 'Dog', category: 'animals', emoji: '🐶', fact: 'Dogs have an amazing sense of smell, much better than humans!' },
-      { name: 'Cat', category: 'animals', emoji: '🐱', fact: 'Cats can make over 100 different sounds!' },
-      { name: 'Elephant', category: 'animals', emoji: '🐘', fact: 'Elephants are the largest animals that live on land!' },
+      { name: 'Dog', category: 'animals', emoji: '🐶', fact: 'WOOF! Dogs have super noses that can smell 10,000 times better than humans! They are like furry detectives!' },
+      { name: 'Cat', category: 'animals', emoji: '🐱', fact: 'MEOW! Cats are chatterboxes who can make over 100 different sounds! They purr when happy!' },
+      { name: 'Elephant', category: 'animals', emoji: '🐘', fact: 'TRUMPET! Elephants are gentle giants - the biggest land animals who never forget their friends!' },
       { name: 'Bird', category: 'animals', emoji: '🐦', fact: 'Birds are the only animals with feathers!' },
       { name: 'Fish', category: 'animals', emoji: '🐠', fact: 'Fish breathe underwater using gills instead of lungs!' },
       { name: 'Lion', category: 'animals', emoji: '🦁', fact: 'Lions live in groups called prides!' },

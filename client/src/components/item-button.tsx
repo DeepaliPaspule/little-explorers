@@ -19,11 +19,11 @@ export const ItemButton = forwardRef<HTMLButtonElement, ItemButtonProps>(({
   className 
 }, ref) => {
   const handleClick = () => {
-    // Trigger vibration feedback
-    accessibilityService.vibrate('select');
+    // Trigger vibration feedback with celebration pattern
+    accessibilityService.vibrate('success');
     
-    // Announce to screen reader
-    accessibilityService.announceToScreenReader(`Learning about ${item.name}. Opening detailed information.`);
+    // Announce to screen reader with excitement
+    accessibilityService.announceToScreenReader(`AWESOME choice! Let's discover amazing things about ${item.name}! Get ready for mind-blowing facts!`);
     
     onClick(item);
   };
@@ -54,7 +54,7 @@ export const ItemButton = forwardRef<HTMLButtonElement, ItemButtonProps>(({
       aria-label={`Learn about ${item.name}. Click to see spelling and fun facts.`}
       role="button"
     >
-      <div className="text-6xl mb-4" aria-hidden="true" role="img" aria-label={`${item.name} emoji`}>
+      <div className="text-6xl mb-4 floating-emoji" aria-hidden="true" role="img" aria-label={`${item.name} emoji`}>
         {item.emoji}
       </div>
       <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-3">

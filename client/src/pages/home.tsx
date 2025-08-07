@@ -76,7 +76,7 @@ export default function HomePage() {
     setCurrentView('items');
     refetchItems();
     
-    accessibilityService.announceToScreenReader(`Now viewing ${category.name}. ${category.description}`);
+    accessibilityService.announceToScreenReader(`FANTASTIC! Welcome to the magical world of ${category.name}! Look at all these incredible things to discover!`);
   };
 
   const handleItemSelect = (item: LearningItem) => {
@@ -94,7 +94,8 @@ export default function HomePage() {
   const closeLearningDisplay = () => {
     setShowLearningDisplay(false);
     setSelectedItem(null);
-    accessibilityService.announceToScreenReader('Closed learning display. Continue exploring items.');
+    accessibilityService.vibrate('navigate');
+    accessibilityService.announceToScreenReader('What an amazing discovery! Ready to explore more incredible things? Keep the adventure going!');
   };
 
 
@@ -164,16 +165,20 @@ export default function HomePage() {
         {/* Welcome Instructions */}
         {currentView === 'categories' && (
           <div className="bg-blue-100 dark:bg-blue-900 border border-blue-400 dark:border-blue-600 text-blue-800 dark:text-blue-200 px-6 py-6 rounded-2xl text-center mb-8">
-            <h3 className="text-2xl font-semibold mb-3">Ready for an Adventure?</h3>
-            <div className="space-y-3 text-lg">
-              <p>Pick any topic below to start your learning journey!</p>
-              <p>Discover amazing facts, see how words are spelled, and explore the world around you.</p>
-              <p className="text-base opacity-80">
-                {accessibilityService.isVibrationAvailable() 
-                  ? "Touch any item to feel it buzz and learn cool facts!"
-                  : "Touch any item to discover fun facts and learn new things!"
-                }
-              </p>
+            <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 bg-clip-text text-transparent">
+              🎉 Welcome to the Fun Zone! 🎉
+            </h3>
+            <div className="space-y-4 text-xl">
+              <p className="font-bold text-purple-700">Get ready for AWESOME discoveries!</p>
+              <p className="font-semibold text-blue-600">Touch, explore, and learn AMAZING things about our world!</p>
+              <div className="bg-yellow-200 rounded-full px-6 py-3 inline-block">
+                <p className="text-lg font-bold text-purple-800">
+                  {accessibilityService.isVibrationAvailable() 
+                    ? "🎯 Touch anything and feel the magic buzz! 🎯"
+                    : "🌟 Touch anything for incredible surprises! 🌟"
+                  }
+                </p>
+              </div>
             </div>
           </div>
         )}
@@ -191,12 +196,14 @@ export default function HomePage() {
         {currentView === 'categories' && !categoriesLoading && (
           <section className="space-y-8" role="region" aria-labelledby="categories-title">
             <div className="text-center space-y-4">
-              <h2 id="categories-title" className="text-3xl font-bold text-gray-800 dark:text-white">
-                What Would You Like to Explore?
+              <h2 id="categories-title" className="text-4xl font-black text-transparent bg-gradient-to-r from-rainbow-start via-rainbow-middle to-rainbow-end bg-clip-text mb-4">
+                🌈 Choose Your Adventure! 🌈
               </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                Pick a topic that interests you! Each category is full of exciting things to discover.
-                Use your keyboard or touch to explore.
+              <p className="text-2xl font-bold text-purple-700 max-w-4xl mx-auto leading-relaxed mb-2">
+                Every button is a doorway to INCREDIBLE discoveries!
+              </p>
+              <p className="text-lg text-blue-600 font-semibold">
+                🎮 Touch, click, or use your keyboard to unlock the magic! 🎮
               </p>
             </div>
 
@@ -224,8 +231,8 @@ export default function HomePage() {
               <h2 id="items-title" className="text-3xl font-bold text-gray-800 dark:text-white">
                 Learning {selectedCategory.name}
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300">
-                Touch anything below to discover cool facts and see how it's spelled!
+              <p className="text-xl font-bold text-purple-700 bg-yellow-200 rounded-full px-6 py-3 inline-block mb-4">
+                🎯 Touch ANYTHING below for mind-blowing surprises! 🎯
               </p>
               <Button
                 onClick={showCategories}
