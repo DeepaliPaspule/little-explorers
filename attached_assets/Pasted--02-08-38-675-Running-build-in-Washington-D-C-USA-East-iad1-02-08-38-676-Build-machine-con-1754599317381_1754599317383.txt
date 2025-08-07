@@ -1,0 +1,38 @@
+[02:08:38.675] Running build in Washington, D.C., USA (East) – iad1
+[02:08:38.676] Build machine configuration: 2 cores, 8 GB
+[02:08:38.691] Cloning github.com/DeepaliPaspule/little-explorers (Branch: main, Commit: d95cc11)
+[02:08:39.200] Previous build caches not available
+[02:08:39.340] Cloning completed: 647.000ms
+[02:08:41.703] Running "vercel build"
+[02:08:42.210] Vercel CLI 44.7.3
+[02:08:42.810] Installing dependencies...
+[02:09:03.152] 
+[02:09:03.153] added 189 packages in 20s
+[02:09:03.154] 
+[02:09:03.154] 42 packages are looking for funding
+[02:09:03.154]   run `npm fund` for details
+[02:09:03.203] Running "npm run build"
+[02:09:03.405] 
+[02:09:03.407] > little-explorers-client@1.0.0 build
+[02:09:03.407] > vite build
+[02:09:03.408] 
+[02:09:03.673] [36mvite v5.4.19 [32mbuilding for production...[36m[39m
+[02:09:03.725] transforming...
+[02:09:04.066] [32m✓[39m 3 modules transformed.
+[02:09:04.067] [31mx[39m Build failed in 367ms
+[02:09:04.067] [31merror during build:
+[02:09:04.067] [31m[vite:css] [postcss] Cannot find module 'tailwindcss-animate'
+[02:09:04.067] Require stack:
+[02:09:04.068] - /vercel/path0/client/tailwind.config.ts[31m
+[02:09:04.068] file: [36m/vercel/path0/client/src/index.css:undefined:NaN[31m
+[02:09:04.068]     at Function._resolveFilename (node:internal/modules/cjs/loader:1365:15)
+[02:09:04.068]     at Function.resolve (node:internal/modules/helpers:145:19)
+[02:09:04.068]     at _resolve (/vercel/path0/client/node_modules/jiti/dist/jiti.js:1:246378)
+[02:09:04.068]     at jiti (/vercel/path0/client/node_modules/jiti/dist/jiti.js:1:249092)
+[02:09:04.069]     at /vercel/path0/client/tailwind.config.ts:103:13
+[02:09:04.069]     at evalModule (/vercel/path0/client/node_modules/jiti/dist/jiti.js:1:251913)
+[02:09:04.069]     at jiti (/vercel/path0/client/node_modules/jiti/dist/jiti.js:1:249841)
+[02:09:04.069]     at /vercel/path0/client/node_modules/tailwindcss/lib/lib/load-config.js:52:26
+[02:09:04.069]     at loadConfig (/vercel/path0/client/node_modules/tailwindcss/lib/lib/load-config.js:62:6)
+[02:09:04.069]     at getTailwindConfig (/vercel/path0/client/node_modules/tailwindcss/lib/lib/setupTrackingContext.js:71:116)[39m
+[02:09:04.084] Error: Command "npm run build" exited with 1
