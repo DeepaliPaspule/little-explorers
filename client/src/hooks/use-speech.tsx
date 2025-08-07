@@ -13,29 +13,26 @@ export function useSpeech() {
   }, []);
 
   const speak = useCallback((text: string) => {
-    if (!isSupported) {
-      // Show fallback text display
-      setFallbackText(text);
-      setShowFallback(true);
-      return;
+    // Always show text fallback for reliability
+    setFallbackText(text);
+    setShowFallback(true);
+
+    // Also attempt speech synthesis if supported
+    if (isSupported) {
+      setIsSpeaking(true);
+      setError(null);
+
+      speechService.speak(
+        text,
+        () => {
+          setIsSpeaking(false);
+        },
+        (error) => {
+          setIsSpeaking(false);
+          // Text fallback is already shown, so no need to handle error
+        }
+      );
     }
-
-    setIsSpeaking(true);
-    setError(null);
-
-    speechService.speak(
-      text,
-      () => {
-        setIsSpeaking(false);
-      },
-      (error) => {
-        setIsSpeaking(false);
-        console.warn('Speech failed, showing text instead:', error);
-        // Show fallback text when speech fails
-        setFallbackText(text);
-        setShowFallback(true);
-      }
-    );
   }, [isSupported]);
 
   const stop = useCallback(() => {

@@ -14,10 +14,10 @@ export function SpeechFallback({ text, isVisible, onClose }: SpeechFallbackProps
   useEffect(() => {
     if (isVisible && text) {
       setDisplayText(text);
-      // Auto-hide after 8 seconds
+      // Auto-hide after 12 seconds to give users time to read
       const timer = setTimeout(() => {
         onClose?.();
-      }, 8000);
+      }, 12000);
       return () => clearTimeout(timer);
     }
   }, [isVisible, text, onClose]);
@@ -33,19 +33,20 @@ export function SpeechFallback({ text, isVisible, onClose }: SpeechFallbackProps
       )}>
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0">
-            <Volume2 className="w-6 h-6 text-primary" />
+            <div className="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
           </div>
           <div className="flex-1">
+            <h4 className="text-sm font-semibold text-primary mb-1">Learning Content:</h4>
             <p className="text-lg font-medium text-gray-800 leading-relaxed">
               {displayText}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="flex-shrink-0 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary focus:rounded"
-            aria-label="Close speech text"
+            className="flex-shrink-0 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary focus:rounded p-1"
+            aria-label="Close learning text"
           >
-            <VolumeX className="w-5 h-5" />
+            ×
           </button>
         </div>
       </div>
