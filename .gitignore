@@ -3,13 +3,11 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 
-# Build outputs
+# Production builds
 dist/
 build/
-.next/
-out/
+*.tsbuildinfo
 
 # Environment variables
 .env
@@ -18,20 +16,14 @@ out/
 .env.test.local
 .env.production.local
 
-# IDE and editor files
+# IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
 
-# OS generated files
+# OS files
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
 # Logs
@@ -48,15 +40,9 @@ pids
 coverage/
 *.lcov
 
-# nyc test coverage
-.nyc_output
-
 # Dependency directories
 node_modules/
 jspm_packages/
-
-# TypeScript cache
-*.tsbuildinfo
 
 # Optional npm cache directory
 .npm
@@ -64,26 +50,16 @@ jspm_packages/
 # Optional eslint cache
 .eslintcache
 
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Database
+*.db
+*.sqlite
+
 # Replit specific
 .replit
 replit.nix
-.config/
-
-# Database
-*.sqlite
-*.db
-
-# Temporary folders
-tmp/
-temp/
-
-# Editor directories and files
-.vscode/
-!.vscode/extensions.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.vercel
