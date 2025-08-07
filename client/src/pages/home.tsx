@@ -2,19 +2,18 @@ import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { CategoryButton } from "@/components/category-button";
 import { ItemButton } from "@/components/item-button";
-import { SpeechStatus } from "@/components/speech-status";
-import { SpeechFallback } from "@/components/speech-fallback";
-import { useSpeech } from "@/hooks/use-speech";
+import { LearningDisplay } from "@/components/learning-display";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Home } from "lucide-react";
+import { ArrowLeft, Home, Vibrate } from "lucide-react";
+import { accessibilityService } from "@/lib/accessibility";
 import type { Category, LearningItem } from "@shared/schema";
 
 export default function HomePage() {
   const [currentView, setCurrentView] = useState<'categories' | 'items'>('categories');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  const [speechEnabled, setSpeechEnabled] = useState(false);
-  const { speak, speakItem, stop, isSpeaking, isSupported, error: speechError, fallbackText, showFallback, hideFallback } = useSpeech();
+  const [selectedItem, setSelectedItem] = useState<LearningItem | null>(null);
+  const [showLearningDisplay, setShowLearningDisplay] = useState(false);
   const { toast } = useToast();
   const firstItemRef = useRef<HTMLButtonElement>(null);
   const firstCategoryRef = useRef<HTMLButtonElement>(null);
@@ -34,35 +33,17 @@ export default function HomePage() {
     enabled: !!selectedCategory?.id,
   });
 
-  // Enable speech on first user interaction
-  const enableSpeech = () => {
-    if (isSupported && !speechEnabled) {
-      setSpeechEnabled(true);
-      // Test speech immediately with a simple message
-      speak('Audio is now enabled. Hello! Welcome to Learn and Listen!');
-    }
-  };
-
-  // Announce welcome message
+  // Welcome announcement for screen readers
   useEffect(() => {
-    if (!categoriesLoading && isSupported && speechEnabled) {
+    if (!categoriesLoading) {
       const timer = setTimeout(() => {
-        speak('Welcome to Learn and Listen! An educational app for young learners. Use Tab to navigate between categories and Enter to select.');
-      }, 500);
+        accessibilityService.announceToScreenReader(
+          'Welcome to Learn and Listen! An accessible educational app. Navigate through categories to learn about fruits, vegetables, animals, and letters. Use Tab to navigate and Enter to select.'
+        );
+      }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [categoriesLoading, isSupported, speechEnabled, speak]);
-
-  // Handle speech errors
-  useEffect(() => {
-    if (speechError) {
-      toast({
-        title: "Speech Error",
-        description: speechError,
-        variant: "destructive",
-      });
-    }
-  }, [speechError, toast]);
+  }, [categoriesLoading]);
 
   // Focus management
   useEffect(() => {
@@ -77,8 +58,10 @@ export default function HomePage() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        stop();
-        if (currentView === 'items') {
+        if (showLearningDisplay) {
+          setShowLearningDisplay(false);
+          setSelectedItem(null);
+        } else if (currentView === 'items') {
           showCategories();
         }
       }
@@ -86,67 +69,63 @@ export default function HomePage() {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [currentView, stop]);
+  }, [currentView, showLearningDisplay]);
 
   const handleCategorySelect = (category: Category) => {
-    if (!speechEnabled) enableSpeech();
-    
     setSelectedCategory(category);
     setCurrentView('items');
     refetchItems();
     
-    if (speechEnabled) {
-      speak(`Now learning ${category.name}. Loading items, please wait.`);
-    }
+    accessibilityService.announceToScreenReader(`Now viewing ${category.name}. ${category.description}`);
   };
 
   const handleItemSelect = (item: LearningItem) => {
-    if (!speechEnabled) enableSpeech();
-    
-    if (speechEnabled) {
-      speakItem(item.name, item.fact);
-    }
+    setSelectedItem(item);
+    setShowLearningDisplay(true);
   };
 
   const showCategories = () => {
     setCurrentView('categories');
     setSelectedCategory(null);
-    if (speechEnabled) {
-      speak('Back to categories. Choose a learning category to continue.');
-    }
+    accessibilityService.vibrate('navigate');
+    accessibilityService.announceToScreenReader('Returned to categories. Choose a learning category to continue.');
   };
 
-  if (!isSupported) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg text-center max-w-md">
-          <h2 className="text-xl font-semibold mb-2">Speech Not Supported</h2>
-          <p className="mb-4">Your browser does not support speech synthesis. Please use a modern browser like Chrome, Firefox, or Safari for the full experience.</p>
-          <p className="text-sm">If you're using a supported browser, try refreshing the page or checking your browser's audio settings.</p>
-        </div>
-      </div>
-    );
-  }
+  const closeLearningDisplay = () => {
+    setShowLearningDisplay(false);
+    setSelectedItem(null);
+    accessibilityService.announceToScreenReader('Closed learning display. Continue exploring items.');
+  };
+
+
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background dark:bg-gray-900">
       {/* Skip to main content */}
       <a 
         href="#main-content" 
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-white px-4 py-2 rounded focus:outline-none focus:ring-4 focus:ring-accent"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-white px-4 py-2 rounded focus:outline-none focus:ring-4 focus:ring-accent z-50"
       >
         Skip to main content
       </a>
 
       {/* Header */}
-      <header className="bg-primary text-white shadow-lg" role="banner">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <h1 className="text-heading font-bold text-center" id="app-title">
-            Learn & Listen
-          </h1>
-          <p className="text-lg text-center mt-2 opacity-90" id="app-subtitle">
-            Educational Learning for Young Minds
-          </p>
+      <header className="bg-primary dark:bg-blue-800 text-white shadow-lg" role="banner">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="text-center space-y-3">
+            <h1 className="text-4xl md:text-5xl font-bold" id="app-title">
+              Learn & Listen
+            </h1>
+            <p className="text-xl md:text-2xl opacity-90" id="app-subtitle">
+              Accessible Learning for Everyone
+            </p>
+            {accessibilityService.isVibrationAvailable() && (
+              <div className="flex items-center justify-center gap-2 text-sm opacity-80">
+                <Vibrate className="w-4 h-4" />
+                <span>Vibration feedback enabled</span>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
@@ -182,26 +161,20 @@ export default function HomePage() {
       </nav>
 
       <main id="main-content" className="max-w-6xl mx-auto px-4 py-8" role="main">
-        {/* Learning Instructions */}
-        {!speechEnabled && (
-          <div className="bg-blue-100 border border-blue-400 text-blue-800 px-6 py-4 rounded-lg text-center mb-8">
-            <h3 className="text-lg font-semibold mb-2">Welcome to Learn & Listen</h3>
-            <p className="mb-3">An educational app designed for accessible learning! Choose a category below to start exploring.</p>
-            <p className="text-sm">Click any item to learn its name, spelling, and fun facts. Content will be displayed clearly for easy reading.</p>
-            <button 
-              onClick={enableSpeech}
-              className="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
-            >
-              Start Learning
-            </button>
-          </div>
-        )}
-
-        {/* Active Learning Feedback */}
-        {speechEnabled && (
-          <div className="bg-green-100 border border-green-400 text-green-800 px-6 py-4 rounded-lg text-center mb-8">
-            <h3 className="text-lg font-semibold mb-2">Learning Mode Active</h3>
-            <p>Great! Click any item to learn about it. Educational content will appear at the bottom of your screen.</p>
+        {/* Welcome Instructions */}
+        {currentView === 'categories' && (
+          <div className="bg-blue-100 dark:bg-blue-900 border border-blue-400 dark:border-blue-600 text-blue-800 dark:text-blue-200 px-6 py-6 rounded-2xl text-center mb-8">
+            <h3 className="text-2xl font-semibold mb-3">Welcome to Accessible Learning</h3>
+            <div className="space-y-3 text-lg">
+              <p>Choose a category below to start exploring educational content.</p>
+              <p>Each item shows clear spelling, emojis, and interesting facts.</p>
+              <p className="text-base opacity-80">
+                {accessibilityService.isVibrationAvailable() 
+                  ? "Tap items for vibration feedback and detailed learning displays."
+                  : "Tap items to see detailed learning displays with spelling and facts."
+                }
+              </p>
+            </div>
           </div>
         )}
 
@@ -218,16 +191,17 @@ export default function HomePage() {
         {currentView === 'categories' && !categoriesLoading && (
           <section className="space-y-8" role="region" aria-labelledby="categories-title">
             <div className="text-center space-y-4">
-              <h2 id="categories-title" className="text-heading font-bold text-gray-800">
+              <h2 id="categories-title" className="text-3xl font-bold text-gray-800 dark:text-white">
                 Choose a Learning Category
               </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Select a category to start learning. Use Tab to navigate and Enter or Space to select. Each item will be spoken aloud when selected.
+              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                Select a category to start learning. Use Tab to navigate and Enter or Space to select. 
+                Each item shows clear visual information and provides tactile feedback.
               </p>
             </div>
 
             <div 
-              className="grid grid-cols-1 md:grid-cols-2 gap-6" 
+              className="grid grid-cols-1 md:grid-cols-2 gap-8" 
               role="group" 
               aria-labelledby="categories-title"
             >
@@ -246,22 +220,25 @@ export default function HomePage() {
         {/* Items View */}
         {currentView === 'items' && selectedCategory && !itemsLoading && (
           <section className="space-y-8" role="region" aria-labelledby="items-title">
-            <div className="text-center space-y-4">
-              <h2 id="items-title" className="text-heading font-bold text-gray-800">
+            <div className="text-center space-y-6">
+              <h2 id="items-title" className="text-3xl font-bold text-gray-800 dark:text-white">
                 Learning {selectedCategory.name}
               </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-300">
+                Tap any item below to see its spelling and learn interesting facts!
+              </p>
               <Button
                 onClick={showCategories}
-                className="bg-secondary text-white hover:bg-green-700 focus:ring-4 focus:ring-accent"
+                className="bg-secondary text-white hover:bg-green-700 focus:ring-4 focus:ring-accent text-lg px-6 py-3"
                 aria-label="Go back to categories"
               >
-                <ArrowLeft className="w-5 h-5 mr-2" />
+                <ArrowLeft className="w-6 h-6 mr-2" />
                 Back to Categories
               </Button>
             </div>
 
             <div 
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" 
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" 
               role="group"
               aria-label={`${selectedCategory.name} learning items`}
             >
@@ -279,25 +256,30 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* Speech Status */}
-      <SpeechStatus isVisible={isSpeaking} />
-
-      {/* Speech Fallback */}
-      <SpeechFallback 
-        text={fallbackText}
-        isVisible={showFallback}
-        onClose={hideFallback}
-      />
+      {/* Learning Display Modal */}
+      {selectedItem && (
+        <LearningDisplay
+          isVisible={showLearningDisplay}
+          itemName={selectedItem.name}
+          itemFact={selectedItem.fact}
+          itemEmoji={selectedItem.emoji}
+          onClose={closeLearningDisplay}
+        />
+      )}
 
       {/* Footer */}
-      <footer className="bg-white border-t-2 border-gray-100 mt-16 py-8" role="contentinfo">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="text-gray-600">
-            An accessible learning tool designed for blind and visually impaired children.
+      <footer className="bg-white dark:bg-gray-800 border-t-2 border-gray-100 dark:border-gray-700 mt-16 py-8" role="contentinfo">
+        <div className="max-w-6xl mx-auto px-4 text-center space-y-4">
+          <p className="text-gray-600 dark:text-gray-300 text-lg">
+            An accessible learning tool designed for all learners.
           </p>
-          <p className="text-gray-500 mt-2">
-            Use Tab to navigate, Enter or Space to select items.
-          </p>
+          <div className="text-gray-500 dark:text-gray-400 space-y-2">
+            <p>Use Tab to navigate, Enter or Space to select items.</p>
+            <p>Press Escape to go back or close displays.</p>
+            {accessibilityService.isVibrationAvailable() && (
+              <p>Vibration feedback provides tactile confirmation on supported devices.</p>
+            )}
+          </div>
         </div>
       </footer>
     </div>

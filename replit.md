@@ -1,8 +1,8 @@
-# Learn & Listen - Educational App for Blind Children
+# Learn & Listen - Accessible Educational App
 
 ## Overview
 
-Learn & Listen is an accessible educational application designed specifically for blind and visually impaired children. The app provides sound-based learning experiences through interactive categories including fruits, vegetables, animals, and alphabet letters. Built with React and Express, it features text-to-speech capabilities, keyboard navigation, and ARIA-compliant accessibility standards to create an inclusive learning environment.
+Learn & Listen is an accessible educational application designed for all learners, with special focus on accessibility for visually impaired users. The app provides non-audio learning experiences through interactive categories including fruits, vegetables, animals, and alphabet letters. Built with React and Express, it features mobile vibration feedback, high-contrast visuals, enhanced screen reader support, and comprehensive keyboard navigation to create an inclusive learning environment.
 
 ## User Preferences
 
@@ -14,8 +14,10 @@ Preferred communication style: Simple, everyday language.
 The client-side application uses React with TypeScript, structured as a single-page application with component-based architecture. The UI is built with shadcn/ui components and Tailwind CSS for styling, providing a clean and accessible interface. Navigation is handled by Wouter for lightweight client-side routing.
 
 **Key Design Decisions:**
-- **Accessibility-first approach**: All components include ARIA labels, keyboard navigation support, and semantic HTML structure
-- **Speech synthesis integration**: Custom speech service wrapper around Web Speech API for text-to-speech functionality
+- **Accessibility-first approach**: All components include comprehensive ARIA labels, keyboard navigation support, and semantic HTML structure
+- **Alternative accessibility features**: Mobile vibration feedback, high-contrast visuals, and enhanced screen reader announcements
+- **Touch-friendly design**: Large interactive elements with 48px minimum touch targets for mobile accessibility
+- **Visual learning display**: Modal-based learning interface showing item spelling, emojis, and educational facts
 - **Component composition**: Modular UI components for categories and learning items with consistent interaction patterns
 - **State management**: React Query for server state management and React hooks for local state
 
@@ -26,6 +28,7 @@ The server follows a REST API pattern using Express.js with TypeScript. The arch
 - **Route handlers**: RESTful endpoints for categories and learning items (`/api/categories`, `/api/learning-items`)
 - **Storage abstraction**: Interface-based storage system with in-memory implementation containing seed data for educational content
 - **Development tooling**: Vite integration for hot module replacement during development
+- **Accessibility service**: Custom accessibility service providing vibration feedback and screen reader announcements
 
 ### Data Storage Solutions
 Currently implements an in-memory storage system with pre-seeded educational content. The application is configured for PostgreSQL with Drizzle ORM for future database persistence.
@@ -34,6 +37,7 @@ Currently implements an in-memory storage system with pre-seeded educational con
 - **Development**: Memory-based storage with educational seed data
 - **Production-ready**: Drizzle schema defined for PostgreSQL migration
 - **Data structure**: Learning items with categories, emojis, and educational facts
+- **Learning display**: Interactive modal showing item spelling, pronunciation guide, and educational content
 
 ### Authentication and Authorization
 No authentication system is currently implemented, as the application is designed for open educational access.
@@ -55,9 +59,12 @@ No authentication system is currently implemented, as the application is designe
 - **Drizzle ORM**: TypeScript ORM with PostgreSQL dialect configuration
 - **Zod**: TypeScript-first schema validation library
 
-#### Accessibility and Speech
-- **Web Speech API**: Browser-native text-to-speech capabilities
-- **ARIA standards**: Comprehensive accessibility attributes and semantic markup
+#### Accessibility Features
+- **Mobile Vibration API**: Tactile feedback for supported devices
+- **High-contrast design**: Enhanced visual accessibility with strong color contrasts
+- **Screen reader optimization**: Comprehensive ARIA labels and live announcements
+- **Keyboard navigation**: Full application control via keyboard input
+- **Touch accessibility**: Large, touch-friendly interactive elements
 
 #### Database Integration
 - **Neon Database**: Serverless PostgreSQL with connection pooling
@@ -67,3 +74,14 @@ No authentication system is currently implemented, as the application is designe
 - **TypeScript**: Static type checking across the full stack
 - **ESBuild**: Fast JavaScript bundler for production builds
 - **Replit integration**: Development environment plugins for enhanced debugging
+
+## Recent Changes (January 7, 2025)
+
+### Major Accessibility Redesign
+- **Removed audio dependency**: Eliminated problematic Web Speech API implementation that was failing in the development environment
+- **Added mobile vibration feedback**: Implemented Vibration API for tactile confirmation on supported mobile devices
+- **Enhanced visual design**: High-contrast color scheme with improved focus indicators and touch-friendly elements
+- **Created LearningDisplay component**: Modal interface showing item spelling with individual letter breakdown and educational facts
+- **Improved screen reader support**: Added comprehensive ARIA live announcements and enhanced semantic markup
+- **Responsive design**: Large touch targets (48px minimum) and improved mobile accessibility
+- **CSS accessibility features**: Added support for prefers-contrast, prefers-reduced-motion, and prefers-font-size media queries
